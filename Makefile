@@ -27,6 +27,7 @@ DAY_BINS  := $(DAYS:%=$(BIN_DIR)/%)
         run-%-part1 run-%-part2 \
         submit-%-part1 submit-%-part2 \
         newday
+		today
 
 all: $(DAY_BINS)
 
