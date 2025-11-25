@@ -126,7 +126,6 @@ int aoc_get_input(AocClient *client, int year, int day, int force, char **out_in
         return -1;
     }
 
-    // Strip trailing newline(s) like Python version did
     strip_trailing_newlines(response);
 
     if (write_string_to_file(cache_path, response) != 0) {

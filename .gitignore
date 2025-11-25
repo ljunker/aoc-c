@@ -1,3 +1,4 @@
 .aoc_cache
 bin
 build
+.vscode

@@ -7,7 +7,8 @@ DAY_DIR := days
 OBJ_DIR := build
 BIN_DIR := bin
 
-DAYS := day00 day01
+DAY_SOURCES := $(wildcard $(DAY_DIR)/*.c)
+DAYS := $(basename $(notdir $(DAY_SOURCES)))
 
 CORE_SRCS := $(SRC_DIR)/aoc_client.c \
              $(SRC_DIR)/util.c \
