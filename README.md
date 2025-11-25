@@ -5,6 +5,7 @@ Advent of Code solved with C
 ## Workflow
 ```bash
 make newday YEAR=2025 DAY=1
+# or make today
 # edit 2025_day01.c
 make 2025_day01
 make run-2025_day01-part1

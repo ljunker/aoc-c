@@ -95,3 +95,13 @@ newday:
 	echo "    return format_string(\"0\");" >> "$$fname"; \
 	echo "}"                      >> "$$fname"; \
 	echo "Created $$fname"
+
+today:
+	@year=$$(date +%Y); \
+	month=$$(date +%m); \
+	day=$$(date +%d); \
+	if [ "$$month" != "12" ]; then \
+		echo "Warning: It's month $$month, AoC is usually in December."; \
+	fi; \
+	echo "Creating $$year day $$day..."; \
+	$(MAKE) newday YEAR=$$year DAY=$$day
