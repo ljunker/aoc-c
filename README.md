@@ -5,7 +5,6 @@ Advent of Code solved with C
 ## Workflow
 ```bash
 cp days/day00.c days/day01.c
-# add day01 to Makefile
 # edit day01.c
 make day01
 make run-day01-part1
