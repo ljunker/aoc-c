@@ -4,6 +4,7 @@ Advent of Code solved with C
 
 ## Workflow
 ```bash
+export AOC_SESSION=<your session cookie>
 make newday YEAR=2025 DAY=1
 # or make today
 # edit 2025_day01.c
