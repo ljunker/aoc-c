@@ -56,7 +56,7 @@ static uint64_t hash_key(const char* key) {
 
 void* hm_get(hm* map, const char* key) {
     uint64_t hash = hash_key(key);
-    size_t index = (size_t)(hash * (uint64_t)(map->capacity-1));
+    size_t index = (size_t)(hash & (uint64_t)(map->capacity-1));
 
     while (map->entries[index].key != NULL) {
         if (strcmp(key, map->entries[index].key) == 0) {
