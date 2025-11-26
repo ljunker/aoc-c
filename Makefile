@@ -35,6 +35,10 @@ CORE_OBJS := $(CORE_SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DAY_OBJS  := $(DAYS:%=$(OBJ_DIR)/%.o)
 DAY_BINS  := $(DAYS:%=$(BIN_DIR)/%)
 
+TEST_SRC := $(SRC_DIR)/tests/containers_test.c
+TEST_OBJ := $(OBJ_DIR)/tests/containers_test.o
+TEST_BIN := $(BIN_DIR)/containers_test
+
 .SECONDARY:
 
 .PHONY: all clean $(DAYS) \
@@ -42,6 +46,7 @@ DAY_BINS  := $(DAYS:%=$(BIN_DIR)/%)
         submit-%-part1 submit-%-part2 \
         newday
 		today
+		test-containers
 
 all: $(DAY_BINS)
 
@@ -58,6 +63,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(OBJ_DIR)/%.o: $(DAY_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TEST_BIN): $(CONTAINER_OBJS) $(TEST_OBJ)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+test-containers: $(TEST_BIN)
+	./$(TEST_BIN)
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
