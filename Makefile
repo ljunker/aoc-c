@@ -7,6 +7,10 @@ DAY_DIR := days
 OBJ_DIR := build
 BIN_DIR := bin
 
+CONTAINERS_DIR := $(SRC_DIR)/containers
+CONTAINER_SRC := $(wildcard $(CONTAINERS_DIR)/*.c)
+CONTAINER_OBJS := $(CONTAINER_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
 # -------------------------------------------------------
 # Automatically find all <YEAR>_dayNN.c files
 # -------------------------------------------------------
@@ -33,16 +37,16 @@ all: $(DAY_BINS)
 
 $(DAYS): %: $(BIN_DIR)/%
 
-$(BIN_DIR)/%: $(CORE_OBJS) $(OBJ_DIR)/%.o
+$(BIN_DIR)/%: $(CORE_OBJS) $(CONTAINER_OBJS) $(OBJ_DIR)/%.o
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(DAY_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
