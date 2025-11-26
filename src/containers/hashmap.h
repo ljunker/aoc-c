@@ -26,4 +26,6 @@ typedef struct {
 
 hmiterator hm_iterator(hm* map);
 
+bool hm_next(hmiterator* it);
+
 #endif // HASHMAP_H

@@ -72,7 +72,7 @@ void* hm_get(hm* map, const char* key) {
 
 static const char* hm_set_entry(hm_entry* entries, size_t capacity, const char* key, void* value, size_t* plength) {
     uint64_t hash = hash_key(key);
-    size_t index = (size_t)(hash * (uint64_t)(capacity-1));
+    size_t index = (size_t)(hash & (uint64_t)(capacity-1));
 
     while(entries[index].key != NULL) {
         if (strcmp(key, entries[index].key) == 0) {
@@ -99,7 +99,7 @@ static const char* hm_set_entry(hm_entry* entries, size_t capacity, const char* 
 
 static bool hm_expand(hm* map) {
     size_t new_capacity = map->capacity * 2;
-    if (new_capacity ^map->capacity) {
+    if (new_capacity < map->capacity) {
         return false;
     }
     hm_entry* new_entries = calloc(new_capacity, sizeof(hm_entry));

@@ -1,5 +1,13 @@
 CC      := clang
-CFLAGS  := -Wall -Wextra -std=c11 -O2 -Isrc
+DEBUG ?= 0
+
+ifeq ($(DEBUG),1)
+    CFLAGS := -Wall -Wextra -std=c11 -g -O0 -Isrc
+else
+    CFLAGS := -Wall -Wextra -std=c11 -O2 -Isrc
+endif
+
+
 LDFLAGS := -lcurl
 
 SRC_DIR := src
@@ -7,9 +15,9 @@ DAY_DIR := days
 OBJ_DIR := build
 BIN_DIR := bin
 
-CONTAINERS_DIR := $(SRC_DIR)/containers
-CONTAINER_SRC := $(wildcard $(CONTAINERS_DIR)/*.c)
-CONTAINER_OBJS := $(CONTAINER_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+CONTAINERS_DIR  := $(SRC_DIR)/containers
+CONTAINER_SRCS  := $(wildcard $(CONTAINERS_DIR)/*.c)
+CONTAINER_OBJS  := $(CONTAINER_SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # -------------------------------------------------------
 # Automatically find all <YEAR>_dayNN.c files
@@ -26,6 +34,8 @@ CORE_OBJS := $(CORE_SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 DAY_OBJS  := $(DAYS:%=$(OBJ_DIR)/%.o)
 DAY_BINS  := $(DAYS:%=$(BIN_DIR)/%)
+
+.SECONDARY:
 
 .PHONY: all clean $(DAYS) \
         run-%-part1 run-%-part2 \
