@@ -257,37 +257,72 @@ double now_sec(void) {
     return (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;
 }
 
+static int cmp_double(const void* a, const void* b) {
+    double da = *(double*)a;
+    double db = *(double*)b;
+    if (da < db) return -1;
+    if (da > db) return 1;
+    return 0;
+}
+
 void benchmark_solver(
     const char* name,
     char* (*solver_fn)(const char*),
     const char* input,
     int runs
 ) {
-    double best = DBL_MAX;
-    double worst = 0.0;
-    double total = 0.0;
+    if (runs < 10) runs = 10;
+
+    double* times = malloc(sizeof(double) * runs);
+    if (!times) {
+        fprintf(stderr, "benchmark: OOM\n");
+        return;
+    }
 
     for (int i = 0; i < runs; i++) {
         double start = now_sec();
         char* res = solver_fn(input);
         double end = now_sec();
-
-        free(res);  // solver returns malloc'd string
-        
-        double dt = end - start;
-        if (dt < best) best = dt;
-        if (dt > worst) worst = dt;
-        total += dt;
+        free(res);
+        times[i] = end - start;
     }
 
-    double avg = total / runs;
+    // sort
+    qsort(times, runs, sizeof(double), cmp_double);
+
+    // drop outliers: remove top 5% and bottom 5%
+    int drop = runs / 50;  // 5% from each side
+    int start_i = drop;
+    int end_i   = runs - drop;
+
+    if (end_i - start_i < 5) {  // safety
+        start_i = 0;
+        end_i   = runs;
+    }
+
+    double sum = 0.0;
+    double best = DBL_MAX;
+    double worst = 0.0;
+
+    for (int i = start_i; i < end_i; i++) {
+        if (times[i] < best) best = times[i];
+        if (times[i] > worst) worst = times[i];
+        sum += times[i];
+    }
+
+    int count = end_i - start_i;
+    double avg = sum / count;
 
     fprintf(stderr,
-        "[bench %s] runs=%d avg=%.6f ms fastest=%.6f ms slowest=%.6f ms\n",
+        "[bench %s] runs=%d (used=%d, dropped=%d)  avg=%.6fms  best=%.6fms  worst=%.6fms\n",
         name,
         runs,
+        count,
+        runs - count,
         avg * 1000.0,
         best * 1000.0,
         worst * 1000.0
     );
+
+    free(times);
 }
