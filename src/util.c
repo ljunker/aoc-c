@@ -156,3 +156,96 @@ void normalize_whitespace_inplace(char *s) {
     }
     *dst = '\0';
 }
+
+void scanner_init(scanner* sc, const char* input) {
+    if (!sc) return;
+    sc->p = input ? input : "";
+}
+
+static int scanner_count_conversions(const char* fmt) {
+    int count = 0;
+    const char* p = fmt;
+    while (*p) {
+        if (*p == '%') {
+            p++;
+            if (*p == '%') {
+                p++;
+                continue;
+            }
+            count++;
+            while (*p && strchr("diuoxXfFeEgGaAcspn", *p) == NULL) {
+                p++;
+            }
+            if (*p) p++;
+        } else {
+            p++;
+        }
+    }
+    return count;
+}
+
+int scanner_next(scanner* sc, const char* fmt, ...) {
+    if (!sc || !sc->p || !fmt) return 0;
+
+    const char* p = sc->p;
+
+    for (;;) {
+        while (*p == ' ' || *p == '\t' || *p == '\r') {
+            p++;
+        }
+        if (*p == '\n') {
+            p++;
+            continue;
+        }
+        break;
+    }
+
+    if (*p == '\0') {
+        sc->p = p;
+        return 0;
+    }
+
+    const char* line_start = p;
+    const char* line_end = p;
+    while (*line_end && *line_end != '\n' && *line_end != '\r') {
+        line_end++;
+    }
+
+    size_t line_len = (size_t)(line_end - line_start);
+    char* buf = malloc(line_len + 1);
+    if (!buf) {
+        return 0;
+    }
+    memcpy(buf, line_start, line_len);
+    buf[line_len] = '\0';
+
+    int expected = scanner_count_conversions(fmt);
+    if (expected <= 0) {
+        free(buf);
+        sc->p = (*line_end ? line_end + 1 : line_end);
+        return 0;
+    }
+
+    va_list args;
+    va_start(args, fmt);
+    int matched = vsscanf(buf, fmt, args);
+    va_end(args);
+
+    free(buf);
+
+    if (*line_end == '\n' || *line_end == '\r') {
+        const char* q = line_end;
+        while (*q == '\n' || *q == '\r') {
+            q++;
+        }
+        sc->p = q;
+    } else {
+        sc->p = line_end;
+    }
+
+    if (matched == expected) {
+        return 1;
+    } else {
+        return 0;
+    }
+}

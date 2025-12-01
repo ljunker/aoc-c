@@ -14,4 +14,11 @@ void strip_trailing_newlines(char *s);
 void strip_html_tags_inplace(char *s);
 void normalize_whitespace_inplace(char *s);
 
+typedef struct {
+    const char* p;
+} scanner;
+
+void scanner_init(scanner* sc, const char* input);
+int scanner_next(scanner* sc, const char* fmt, ...);
+
 #endif // UTIL_H
