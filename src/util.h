@@ -2,6 +2,7 @@
 #define UTIL_H
 
 #include <stddef.h>
+#include <time.h>
 
 char *str_dup(const char *s);
 char *path_join(const char *a, const char *b);
@@ -20,5 +21,7 @@ typedef struct {
 
 void scanner_init(scanner* sc, const char* input);
 int scanner_next(scanner* sc, const char* fmt, ...);
+
+double now_sec(void);
 
 #endif // UTIL_H
