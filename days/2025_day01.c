@@ -69,21 +69,11 @@ static Result solve_both(const char *input) {
 }
 
 char *solve_part1(const char *input) {
-    double start = now_sec();
     Result res = solve_both(input);
-    double end = now_sec();
-    double ms = (end - start) * 1000.0;
-
-    fprintf(stdout, "[part1 time] %.3f ms\n", ms);
     return format_string("%ld", res.end_zero_count);
 }
 
 char *solve_part2(const char *input) {
-    double start = now_sec();
     Result res = solve_both(input);
-    double end = now_sec();
-    double ms = (end - start) * 1000.0;
-
-    fprintf(stdout, "[part2 time] %.3f ms\n", ms);
     return format_string("%ld", res.click_zero_count);
 }

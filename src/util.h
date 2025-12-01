@@ -24,4 +24,11 @@ int scanner_next(scanner* sc, const char* fmt, ...);
 
 double now_sec(void);
 
+void benchmark_solver(
+    const char* name,
+    char* (*solver_fn)(const char*),
+    const char* input,
+    int runs
+);
+
 #endif // UTIL_H

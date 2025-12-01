@@ -88,6 +88,12 @@ submit-%-part1: $(BIN_DIR)/%
 submit-%-part2: $(BIN_DIR)/%
 	./$< --part 2 --submit
 
+bench-%: $(BIN_DIR)/%
+	echo "Benchmarking $$* ..."; \
+	runs=200000; \
+	echo "runs=$$runs"; \
+	$(BIN_DIR)/$* --bench $$runs
+
 # ------------------ generator: make newday YEAR=2025 DAY=1 ---------
 
 newday:

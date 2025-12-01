@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <float.h>
 
 char *str_dup(const char *s) {
     if (!s) return NULL;
@@ -254,4 +255,39 @@ double now_sec(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;
+}
+
+void benchmark_solver(
+    const char* name,
+    char* (*solver_fn)(const char*),
+    const char* input,
+    int runs
+) {
+    double best = DBL_MAX;
+    double worst = 0.0;
+    double total = 0.0;
+
+    for (int i = 0; i < runs; i++) {
+        double start = now_sec();
+        char* res = solver_fn(input);
+        double end = now_sec();
+
+        free(res);  // solver returns malloc'd string
+        
+        double dt = end - start;
+        if (dt < best) best = dt;
+        if (dt > worst) worst = dt;
+        total += dt;
+    }
+
+    double avg = total / runs;
+
+    fprintf(stderr,
+        "[bench %s] runs=%d avg=%.6f ms fastest=%.6f ms slowest=%.6f ms\n",
+        name,
+        runs,
+        avg * 1000.0,
+        best * 1000.0,
+        worst * 1000.0
+    );
 }
