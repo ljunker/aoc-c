@@ -1,6 +1,8 @@
 #include "solver.h"
 #include "util.h"
 
+#include "containers/numset.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,33 +32,9 @@ static int num_digits(long long x) {
     return d;
 }
 
-static int cmp_ll(const void* a, const void* b) {
-    long long aa = *(const long long*)a;
-    long long bb = *(const long long*)b;
-    if (aa < bb) return -1;
-    if (aa > bb) return 1;
-    return 0;
-}
-
-static void push_candidate(long long v,
-                           long long **arr,
-                           size_t *len,
-                           size_t *cap) {
-    if (*len == *cap) {
-        size_t new_cap = (*cap ? *cap * 2 : 128);
-        long long *new_arr = realloc(*arr, new_cap * sizeof(long long));
-        if (!new_arr) {
-            fprintf(stderr, "sum_invalid_in_range_k: OOM\n");
-            free(*arr);
-            exit(1);
-        }
-        *arr = new_arr;
-        *cap = new_cap;
-    }
-    (*arr)[(*len)++] = v;
-}
-
-static long long sum_invalid_in_range_k(long long lo, long long hi, int k_min, int k_max_global) {
+static long long sum_invalid_in_range_k(long long lo, long long hi,
+                                        int k_min, int k_max_global)
+{
     init_pow10();
 
     if (hi < lo) {
@@ -68,9 +46,7 @@ static long long sum_invalid_in_range_k(long long lo, long long hi, int k_min, i
 
     int max_digits_hi = num_digits(hi);
 
-    long long *candidates = NULL;
-    size_t cap = 0;
-    size_t len = 0;
+    numset* S = numset_new();
 
     for (int m = 1; m <= max_digits_hi / 2; m++) {
         long long start_p = pow10_arr[m - 1];
@@ -97,43 +73,36 @@ static long long sum_invalid_in_range_k(long long lo, long long hi, int k_min, i
                     break;
                 }
                 if (candidate >= lo) {
-                    push_candidate(candidate, &candidates, &len, &cap);
+                    numset_add(S, candidate);
                 }
             }
         }
     }
 
-    if (len == 0) {
-        free(candidates);
-        return 0;
-    }
-
-    qsort(candidates, len, sizeof(long long), cmp_ll);
-
     long long total = 0;
-    long long prev = candidates[0];
-    total += prev;
-
-    for (size_t i = 1; i < len; i++) {
-        if (candidates[i] != prev) {
-            total += candidates[i];
-            prev = candidates[i];
-        }
+    numset_iter it = numset_iterator(S);
+    long long v;
+    while (numset_next(&it, &v)) {
+        total += v;
     }
 
-    free(candidates);
+    numset_free(S);
     return total;
 }
 
-static long long solve_all_ranges(const char* input, int k_min, int k_max_global) {
+static long long solve_all_ranges(const char* input,
+                                  int k_min,
+                                  int k_max_global)
+{
     long long total = 0;
     const char* p = input;
 
     while (*p) {
-        while (*p == ',' || *p == '\n' || *p == '\r' || *p == ' ' || *p == '\t') {
+        while (*p == ',' || *p == '\n' || *p == '\r' ||
+               *p == ' '  || *p == '\t') {
             p++;
         }
-        if (*p == '\0') break;
+        if (!*p) break;
 
         long long lo, hi;
         int consumed = 0;
