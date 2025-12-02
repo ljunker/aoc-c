@@ -290,8 +290,6 @@ void benchmark_solver(
     // sort
     qsort(times, runs, sizeof(double), cmp_double);
 
-    // drop outliers: remove top 5% and bottom 5%
-    int drop = runs / 50;  // 5% from each side
     int start_i = 0;
     int end_i   = runs;
 

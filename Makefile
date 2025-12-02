@@ -4,7 +4,7 @@ DEBUG ?= 0
 ifeq ($(DEBUG),1)
     CFLAGS := -Wall -Wextra -std=c11 -g -O0 -Isrc
 else
-    CFLAGS := -Wall -Wextra -std=c11 -O3 -Isrc
+    CFLAGS := -Wall -Wextra -Werror -std=c11 -O3 -Isrc
 endif
 
 
