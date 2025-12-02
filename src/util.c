@@ -292,13 +292,8 @@ void benchmark_solver(
 
     // drop outliers: remove top 5% and bottom 5%
     int drop = runs / 50;  // 5% from each side
-    int start_i = drop;
-    int end_i   = runs - drop;
-
-    if (end_i - start_i < 5) {  // safety
-        start_i = 0;
-        end_i   = runs;
-    }
+    int start_i = 0;
+    int end_i   = runs;
 
     double sum = 0.0;
     double best = DBL_MAX;
@@ -314,11 +309,9 @@ void benchmark_solver(
     double avg = sum / count;
 
     fprintf(stderr,
-        "[bench %s] runs=%d (used=%d, dropped=%d)  avg=%.6fms  best=%.6fms  worst=%.6fms\n",
+        "[bench %s] runs=%d  avg=%.6fms  best=%.6fms  worst=%.6fms\n",
         name,
         runs,
-        count,
-        runs - count,
         avg * 1000.0,
         best * 1000.0,
         worst * 1000.0
