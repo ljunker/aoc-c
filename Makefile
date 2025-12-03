@@ -89,7 +89,7 @@ submit-%-part2: $(BIN_DIR)/%
 	./$< --part 2 --submit
 
 bench-%: $(BIN_DIR)/%
-	echo "Benchmarking $$* ..."; \
+	echo "Benchmarking $* ..."; \
 	runs=20000; \
 	echo "runs=$$runs"; \
 	$(BIN_DIR)/$* --bench $$runs
