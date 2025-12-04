@@ -257,14 +257,6 @@ double now_sec(void) {
     return (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;
 }
 
-static int cmp_double(const void* a, const void* b) {
-    double da = *(double*)a;
-    double db = *(double*)b;
-    if (da < db) return -1;
-    if (da > db) return 1;
-    return 0;
-}
-
 void benchmark_solver(
     const char* name,
     char* (*solver_fn)(const char*),
@@ -287,9 +279,6 @@ void benchmark_solver(
         times[i] = end - start;
     }
 
-    // sort
-    qsort(times, runs, sizeof(double), cmp_double);
-
     int start_i = 0;
     int end_i   = runs;
 
@@ -303,8 +292,7 @@ void benchmark_solver(
         sum += times[i];
     }
 
-    int count = end_i - start_i;
-    double avg = sum / count;
+    double avg = sum / runs;
 
     fprintf(stderr,
         "[bench %s] runs=%d  avg=%.6fms  best=%.6fms  worst=%.6fms\n",
