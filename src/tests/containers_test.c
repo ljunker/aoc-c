@@ -105,8 +105,7 @@ static void test_stringbuilder(void) {
     sb_append_char(b, ' ');
     sb_append_int(b, 123);
 
-    const char* s = sb_str(b);
-    assert(strcmp(s, "Hello World! 123") == 0);
+    assert(strcmp(sb_str(b), "Hello World! 123") == 0);
 
     sb_free(b);
 }
