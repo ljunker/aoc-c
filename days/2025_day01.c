@@ -1,10 +1,6 @@
 #include "solver.h"
 #include "util.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 const int AOC_YEAR = 2025;
 const int AOC_DAY = 1;
 
@@ -13,7 +9,7 @@ typedef struct {
     long click_zero_count;
 } Result;
 
-static long count_zeros_on_rotation(char dir, int pos, long dist) {
+static long count_zeros_on_rotation(const char dir, const int pos, const long dist) {
     if (dist <= 0)
         return 0;
 
@@ -31,7 +27,7 @@ static long count_zeros_on_rotation(char dir, int pos, long dist) {
     if (first_k > dist) {
         return 0;
     }
-    long remaining = dist - first_k;
+    const long remaining = dist - first_k;
     return remaining / 100 + 1;
 }
 
@@ -50,7 +46,7 @@ static Result solve_both(const char *input) {
 
         click_zero_count += count_zeros_on_rotation(dir, pos, dist);
 
-        long steps = dist % 100;
+        const long steps = dist % 100;
         if (dir == 'L' || dir == 'l') {
             pos = (int)((pos - steps) % 100);
             if (pos < 0)
@@ -64,16 +60,16 @@ static Result solve_both(const char *input) {
         }
     }
 
-    Result res = {end_zero_count, click_zero_count};
+    const Result res = {end_zero_count, click_zero_count};
     return res;
 }
 
 char *solve_part1(const char *input) {
-    Result res = solve_both(input);
+    const Result res = solve_both(input);
     return format_string("%ld", res.end_zero_count);
 }
 
 char *solve_part2(const char *input) {
-    Result res = solve_both(input);
+    const Result res = solve_both(input);
     return format_string("%ld", res.click_zero_count);
 }

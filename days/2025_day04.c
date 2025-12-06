@@ -4,10 +4,7 @@
 #include "containers/grid.h"
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdint.h>
-#include <stdbool.h>
 
 const int AOC_YEAR = 2025;
 const int AOC_DAY  = 4;
@@ -17,9 +14,9 @@ static void analyze_grid(const char* input,
                          int* out_removed_total) {
     Grid* g = grid_from_string(input);
 
-    int w = g->width;
-    int h = g->height;
-    int n = w * h;
+    const int w = g->width;
+    const int h = g->height;
+    const int n = w * h;
 
     char* cells = g->cells;
 
@@ -34,7 +31,7 @@ static void analyze_grid(const char* input,
 
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            int idx = y * w + x;
+            const int idx = y * w + x;
             if (cells[idx] != '@') {
                 degree[idx] = 0;
                 continue;
@@ -42,10 +39,10 @@ static void analyze_grid(const char* input,
 
             uint8_t count = 0;
             for (int dir = 0; dir < 8; dir++) {
-                int nx = x + dx[dir];
-                int ny = y + dy[dir];
+                const int nx = x + dx[dir];
+                const int ny = y + dy[dir];
                 if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
-                int nidx = ny * w + nx;
+                const int nidx = ny * w + nx;
                 if (cells[nidx] == '@') {
                     count++;
                 }
@@ -62,21 +59,21 @@ static void analyze_grid(const char* input,
     int removed_total = 0;
 
     while (head < tail) {
-        int idx = queue[head++];
+        const int idx = queue[head++];
         if (cells[idx] != '@') continue;
 
         cells[idx] = '.';
         removed_total++;
 
-        int x = idx % w;
-        int y = idx / w;
+        const int x = idx % w;
+        const int y = idx / w;
 
         for (int dir = 0; dir < 8; dir++) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
+            const int nx = x + dx[dir];
+            const int ny = y + dy[dir];
             if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
 
-            int nidx = ny * w + nx;
+            const int nidx = ny * w + nx;
             if (cells[nidx] != '@') continue;
 
             uint8_t d = degree[nidx];
@@ -94,8 +91,8 @@ static void analyze_grid(const char* input,
     free(degree);
     grid_free(g);
 
-    if (out_accessible_initial) *out_accessible_initial = accessible_initial;
-    if (out_removed_total) *out_removed_total = removed_total;
+    *out_accessible_initial = accessible_initial;
+    *out_removed_total = removed_total;
 }
 
 char* solve_part1(const char* input) {

@@ -2,7 +2,6 @@
 #include "util.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 const int AOC_YEAR = 2025;
@@ -10,11 +9,11 @@ const int AOC_DAY  = 3;
 
 // Part 1
 
-static int max_2digits_for_line(const char* line, size_t len) {
+static int max_2digits_for_line(const char* line, const size_t len) {
     int *digits = malloc(len * sizeof(int));
 
     for (size_t i = 0; i < len; i++) {
-        char c = line[i];
+        const char c = line[i];
         if (c >= '0' && c <= '9') {
             digits[i] = c - '0';
         }
@@ -31,7 +30,7 @@ static int max_2digits_for_line(const char* line, size_t len) {
     int best = 0;
     for (size_t i = 0; i < len; i++) {
         if (max_right[i] >= 0) {
-            int val = digits[i] * 10 + max_right[i];
+            const int val = digits[i] * 10 + max_right[i];
             if (val > best) best = val;
         }
     }
@@ -43,13 +42,13 @@ static int max_2digits_for_line(const char* line, size_t len) {
 
 // Part 2
 
-static long long max_12digits_for_line(const char* line, size_t len) {
+static long long max_12digits_for_line(const char* line, const size_t len) {
     const int K = 12;
 
     int *digits = malloc(len * sizeof(int));
 
     for (size_t i = 0; i < len; i++) {
-        char c = line[i];
+        const char c = line[i];
         if (c >= '0' && c <= '9') {
             digits[i] = c - '0';
         }
@@ -59,15 +58,15 @@ static long long max_12digits_for_line(const char* line, size_t len) {
     ssize_t prev_index = -1;
 
     for (int pos = 0; pos < K; pos++) {
-        int remaining = K - pos;
-        ssize_t left  = prev_index + 1;
-        ssize_t right = (ssize_t)len - remaining;
+        const int remaining = K - pos;
+        const ssize_t left  = prev_index + 1;
+        const ssize_t right = (ssize_t)len - remaining;
 
         int best_digit = -1;
         ssize_t best_idx = left;
 
         for (ssize_t j = left; j <= right; j++) {
-            int d = digits[j];
+            const int d = digits[j];
             if (d > best_digit) {
                 best_digit = d;
                 best_idx = j;
@@ -94,7 +93,7 @@ static long long solve_total_part1(const char* input) {
         while (*p && *p != '\n' && *p != '\r') {
             p++;
         }
-        size_t len = (size_t)(p - start);
+        const size_t len = (size_t)(p - start);
         if (len > 0) {
             total += max_2digits_for_line(start, len);
         }
@@ -115,7 +114,7 @@ static long long solve_total_part2(const char* input) {
         while (*p && *p != '\n' && *p != '\r') {
             p++;
         }
-        size_t len = (size_t)(p - start);
+        const size_t len = (size_t)(p - start);
         if (len > 0) {
             total += max_12digits_for_line(start, len);
         }
@@ -128,11 +127,11 @@ static long long solve_total_part2(const char* input) {
 }
 
 char* solve_part1(const char* input) {
-    long long ans = solve_total_part1(input);
+    const long long ans = solve_total_part1(input);
     return format_string("%lld", ans);
 }
 
 char* solve_part2(const char* input) {
-    long long ans = solve_total_part2(input);
+    const long long ans = solve_total_part2(input);
     return format_string("%lld", ans);
 }

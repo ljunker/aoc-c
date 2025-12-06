@@ -4,11 +4,9 @@
 #include "containers/numset.h"
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 const int AOC_YEAR = 2025;
-const int AOC_DAY  = 02;
+const int AOC_DAY = 02;
 
 static long long pow10_arr[20];
 static int pow10_init = 0;
@@ -32,25 +30,24 @@ static int num_digits(long long x) {
     return d;
 }
 
-static long long sum_invalid_in_range_k(long long lo, long long hi,
-                                        int k_min, int k_max_global)
-{
+static long long sum_invalid_in_range_k(long long lo, long long hi, const int k_max_global) {
     init_pow10();
 
     if (hi < lo) {
-        long long tmp = lo;
+        const long long tmp = lo;
         lo = hi;
         hi = tmp;
     }
     if (hi <= 0) return 0;
 
-    int max_digits_hi = num_digits(hi);
+    const int max_digits_hi = num_digits(hi);
 
-    numset* S = numset_new();
+    numset *S = numset_new();
 
     for (int m = 1; m <= max_digits_hi / 2; m++) {
-        long long start_p = pow10_arr[m - 1];
-        long long end_p   = pow10_arr[m] - 1;
+        const int k_min = 2;
+        const long long start_p = pow10_arr[m - 1];
+        const long long end_p = pow10_arr[m] - 1;
 
         int max_k_for_m = max_digits_hi / m;
         if (max_k_for_m < k_min) continue;
@@ -62,13 +59,13 @@ static long long sum_invalid_in_range_k(long long lo, long long hi,
                 mult = mult * pow10_arr[m] + 1;
             }
 
-            long long min_candidate = start_p * mult;
+            const long long min_candidate = start_p * mult;
             if (min_candidate > hi) {
                 break;
             }
 
             for (long long p = start_p; p <= end_p; p++) {
-                long long candidate = p * mult;
+                const long long candidate = p * mult;
                 if (candidate > hi) {
                     break;
                 }
@@ -90,40 +87,53 @@ static long long sum_invalid_in_range_k(long long lo, long long hi,
     return total;
 }
 
-static long long solve_all_ranges(const char* input,
-                                  int k_min,
-                                  int k_max_global)
-{
+static long long solve_all_ranges(const char *input, const int k_max_global) {
     long long total = 0;
-    const char* p = input;
+    const char *p = input;
 
     while (*p) {
+        // Skip separators
         while (*p == ',' || *p == '\n' || *p == '\r' ||
-               *p == ' '  || *p == '\t') {
+               *p == ' ' || *p == '\t') {
             p++;
-        }
+               }
         if (!*p) break;
 
-        long long lo, hi;
-        int consumed = 0;
-        if (sscanf(p, "%lld-%lld%n", &lo, &hi, &consumed) != 2) {
+        // ---- parse lo ----
+        char *endptr;
+        const long long lo = strtoll(p, &endptr, 10);
+        if (endptr == p) {
+            // no number found → stop
             break;
         }
+        p = endptr;
 
-        total += sum_invalid_in_range_k(lo, hi, k_min, k_max_global);
+        // expect '-'
+        if (*p != '-') {
+            break; // malformed range
+        }
+        p++;
 
-        p += consumed;
+        // ---- parse hi ----
+        const long long hi = strtoll(p, &endptr, 10);
+        if (endptr == p) {
+            break; // malformed range
+        }
+        p = endptr;
+
+        total += sum_invalid_in_range_k(lo, hi, k_max_global);
     }
 
     return total;
 }
 
-char* solve_part1(const char* input) {
-    long long ans = solve_all_ranges(input, 2, 2);
+
+char *solve_part1(const char *input) {
+    const long long ans = solve_all_ranges(input, 2);
     return format_string("%lld", ans);
 }
 
-char* solve_part2(const char* input) {
-    long long ans = solve_all_ranges(input, 2, 100);
+char *solve_part2(const char *input) {
+    const long long ans = solve_all_ranges(input, 100);
     return format_string("%lld", ans);
 }
