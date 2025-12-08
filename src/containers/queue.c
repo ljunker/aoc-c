@@ -29,7 +29,7 @@ static void queue_ensure_capacity(queue* q, size_t min_cap) {
     }
 
     for (size_t i = 0; i < q->len; i++) {
-        size_t idx = (q->head + i) % q->cap;
+        const size_t idx = (q->head + i) % q->cap;
         new_data[i] = q->data[idx];
     }
 

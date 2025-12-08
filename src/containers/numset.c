@@ -78,8 +78,8 @@ static bool numset_expand(numset* s) {
 
     for (size_t i = 0; i < s->capacity; i++) {
         if (s->entries[i].used) {
-            long long v = s->entries[i].value;
-            uint64_t h = hash_u64((uint64_t)v);
+            const long long v = s->entries[i].value;
+            const uint64_t h = hash_u64((uint64_t)v);
             size_t idx = (size_t)(h & (new_capacity - 1));
 
             while (new_entries[idx].used) {
@@ -105,7 +105,7 @@ bool numset_add(numset* s, long long value) {
         }
     }
 
-    uint64_t h = hash_u64((uint64_t)value);
+    const uint64_t h = hash_u64((uint64_t)value);
     size_t idx = (size_t)(h & (s->capacity - 1));
 
     while (s->entries[idx].used) {
@@ -123,7 +123,7 @@ bool numset_add(numset* s, long long value) {
 
 bool numset_contains(numset* s, long long value) {
     if (!s) return false;
-    uint64_t h = hash_u64((uint64_t)value);
+    const uint64_t h = hash_u64((uint64_t)value);
     size_t idx = (size_t)(h & (s->capacity - 1));
 
     while (s->entries[idx].used) {
@@ -149,10 +149,10 @@ numset_iter numset_iterator(numset* s) {
 
 bool numset_next(numset_iter* it, long long* out_value) {
     if (!it || !it->_set || !out_value) return false;
-    numset* s = it->_set;
+    const numset* s = it->_set;
 
     while (it->_index < s->capacity) {
-        size_t i = it->_index++;
+        const size_t i = it->_index++;
         if (s->entries[i].used) {
             *out_value = s->entries[i].value;
             return true;

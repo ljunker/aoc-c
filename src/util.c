@@ -11,7 +11,7 @@
 
 char *str_dup(const char *s) {
     if (!s) return NULL;
-    size_t len = strlen(s);
+    const size_t len = strlen(s);
     char *copy = malloc(len + 1);
     if (!copy) return NULL;
     memcpy(copy, s, len + 1);
@@ -22,11 +22,11 @@ char *path_join(const char *a, const char *b) {
     if (!a) return str_dup(b);
     if (!b) return str_dup(a);
 
-    size_t len_a = strlen(a);
-    size_t len_b = strlen(b);
-    int need_sep = (len_a > 0 && a[len_a - 1] != '/');
+    const size_t len_a = strlen(a);
+    const size_t len_b = strlen(b);
+    const int need_sep = (len_a > 0 && a[len_a - 1] != '/');
 
-    size_t total = len_a + need_sep + len_b + 1;
+    const size_t total = len_a + need_sep + len_b + 1;
     char *res = malloc(total);
     if (!res) return NULL;
 
@@ -77,7 +77,7 @@ int read_file_to_string(const char *path, char **out_content) {
         fclose(f);
         return -1;
     }
-    long size = ftell(f);
+    const long size = ftell(f);
     if (size < 0) {
         fclose(f);
         return -1;
@@ -90,7 +90,7 @@ int read_file_to_string(const char *path, char **out_content) {
         return -1;
     }
 
-    size_t read = fread(buf, 1, (size_t)size, f);
+    const size_t read = fread(buf, 1, (size_t)size, f);
     fclose(f);
     if (read != (size_t)size) {
         free(buf);
@@ -104,8 +104,8 @@ int read_file_to_string(const char *path, char **out_content) {
 int write_string_to_file(const char *path, const char *content) {
     FILE *f = fopen(path, "wb");
     if (!f) return -1;
-    size_t len = strlen(content);
-    size_t written = fwrite(content, 1, len, f);
+    const size_t len = strlen(content);
+    const size_t written = fwrite(content, 1, len, f);
     fclose(f);
     return (written == len) ? 0 : -1;
 }
@@ -123,7 +123,7 @@ void strip_html_tags_inplace(char *s) {
     if (!s) return;
     char *dst = s;
     int in_tag = 0;
-    for (char *p = s; *p; p++) {
+    for (const char *p = s; *p; p++) {
         if (*p == '<') {
             in_tag = 1;
             continue;
@@ -143,8 +143,8 @@ void normalize_whitespace_inplace(char *s) {
     if (!s) return;
     char *dst = s;
     int in_space = 0;
-    for (char *p = s; *p; p++) {
-        char c = *p;
+    for (const char *p = s; *p; p++) {
+        const char c = *p;
         if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
             if (!in_space) {
                 *dst++ = ' ';
@@ -220,7 +220,7 @@ int scanner_next(scanner* sc, const char* fmt, ...) {
     memcpy(buf, line_start, line_len);
     buf[line_len] = '\0';
 
-    int expected = scanner_count_conversions(fmt);
+    const int expected = scanner_count_conversions(fmt);
     if (expected <= 0) {
         free(buf);
         sc->p = (*line_end ? line_end + 1 : line_end);
@@ -229,7 +229,7 @@ int scanner_next(scanner* sc, const char* fmt, ...) {
 
     va_list args;
     va_start(args, fmt);
-    int matched = vsscanf(buf, fmt, args);
+    const int matched = vsscanf(buf, fmt, args);
     va_end(args);
 
     free(buf);
@@ -272,15 +272,15 @@ void benchmark_solver(
     }
 
     for (int i = 0; i < runs; i++) {
-        double start = now_sec();
+        const double start = now_sec();
         char* res = solver_fn(input);
-        double end = now_sec();
+        const double end = now_sec();
         free(res);
         times[i] = end - start;
     }
 
-    int start_i = 0;
-    int end_i   = runs;
+    const int start_i = 0;
+    const int end_i   = runs;
 
     double sum = 0.0;
     double best = DBL_MAX;
@@ -292,7 +292,7 @@ void benchmark_solver(
         sum += times[i];
     }
 
-    double avg = sum / runs;
+    const double avg = sum / runs;
 
     fprintf(stderr,
         "[bench %s] runs=%d  avg=%.6fms  best=%.6fms  worst=%.6fms\n",

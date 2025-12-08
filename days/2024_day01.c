@@ -51,9 +51,9 @@ static int bfs_shortest_path(Grid* g, Point start, Point goal) {
 
     while (!queue_empty(q)) {
         Node* cur = (Node*)queue_pop(q);
-        int x = cur->x;
-        int y = cur->y;
-        int dist = cur->dist;
+        const int x = cur->x;
+        const int y = cur->y;
+        const int dist = cur->dist;
 
         if (x == goal.x && y == goal.y) {
             answer = dist;
@@ -62,11 +62,11 @@ static int bfs_shortest_path(Grid* g, Point start, Point goal) {
         }
 
         for (int i = 0; i < 4; i++) {
-            int nx = x + DIRS4[i].x;
-            int ny = y + DIRS4[i].y;
+            const int nx = x + DIRS4[i].x;
+            const int ny = y + DIRS4[i].y;
 
             if (!grid_in_bounds(g, nx, ny)) continue;
-            char cell = grid_get(g, nx, ny);
+            const char cell = grid_get(g, nx, ny);
             if (cell == '#') continue;  // wall
 
             coord_key(keybuf, sizeof(keybuf), nx, ny);
@@ -102,7 +102,7 @@ static int find_start_and_goal(Grid* g, Point* out_start, Point* out_goal) {
     int found_s = 0, found_e = 0;
     for (int y = 0; y < g->height; y++) {
         for (int x = 0; x < g->width; x++) {
-            char c = grid_get(g, x, y);
+            const char c = grid_get(g, x, y);
             if (c == 'S') {
                 out_start->x = x;
                 out_start->y = y;
@@ -131,7 +131,7 @@ char* solve_part1(const char* input) {
         return format_string("0");
     }
 
-    int dist = bfs_shortest_path(g, start, goal);
+    const int dist = bfs_shortest_path(g, start, goal);
     grid_free(g);
 
     if (dist < 0) {

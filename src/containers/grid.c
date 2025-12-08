@@ -42,14 +42,14 @@ bool grid_in_bounds(Grid* g, int x, int y) {
 char grid_get(Grid* g, int x, int y) {
     if (!g) return 0;
     if (!grid_in_bounds(g, x, y)) return 0;
-    size_t idx = (size_t)y * (size_t)g->width + (size_t)x;
+    const size_t idx = (size_t)y * (size_t)g->width + (size_t)x;
     return g->cells[idx];
 }
 
 void grid_set(Grid* g, int x, int y, char value) {
     if (!g) return;
     if (!grid_in_bounds(g, x, y)) return;
-    size_t idx = (size_t)y * (size_t)g->width + (size_t)x;
+    const size_t idx = (size_t)y * (size_t)g->width + (size_t)x;
     g->cells[idx] = value;
 }
 

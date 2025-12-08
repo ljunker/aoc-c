@@ -29,7 +29,7 @@ void set_free(set* s) {
 bool set_add(set* s, const char* key) {
     if (!s || !key) return false;
 
-    void* existing = hm_get(s->map, key);
+    const void* existing = hm_get(s->map, key);
     if (existing != NULL) {
         return false;
     }

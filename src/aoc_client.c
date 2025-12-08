@@ -11,7 +11,7 @@
 static size_t write_to_string_cb(void *ptr, size_t size, size_t nmemb, void *userdata) {
     size_t total = size * nmemb;
     char **pstr = (char **)userdata;
-    size_t old_len = (*pstr) ? strlen(*pstr) : 0;
+    const size_t old_len = (*pstr) ? strlen(*pstr) : 0;
 
     char *new_buf = realloc(*pstr, old_len + total + 1);
     if (!new_buf) return 0; // allocation failure
@@ -113,7 +113,7 @@ int aoc_get_input(AocClient *client, int year, int day, int force, char **out_in
     snprintf(cookie_header, sizeof(cookie_header), "session=%s", client->config.session_token);
     curl_easy_setopt(curl, CURLOPT_COOKIE, cookie_header);
 
-    CURLcode res = curl_easy_perform(curl);
+    const CURLcode res = curl_easy_perform(curl);
     long status = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
     curl_easy_cleanup(curl);
@@ -226,7 +226,7 @@ int aoc_submit_answer(AocClient *client,
     snprintf(cookie_header, sizeof(cookie_header), "session=%s", client->config.session_token);
     curl_easy_setopt(curl, CURLOPT_COOKIE, cookie_header);
 
-    CURLcode res = curl_easy_perform(curl);
+    const CURLcode res = curl_easy_perform(curl);
     long status = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
     curl_easy_cleanup(curl);

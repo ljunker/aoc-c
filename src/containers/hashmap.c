@@ -55,7 +55,7 @@ static uint64_t hash_key(const char* key) {
 }
 
 void* hm_get(hm* map, const char* key) {
-    uint64_t hash = hash_key(key);
+    const uint64_t hash = hash_key(key);
     size_t index = (size_t)(hash & (uint64_t)(map->capacity-1));
 
     while (map->entries[index].key != NULL) {
@@ -71,7 +71,7 @@ void* hm_get(hm* map, const char* key) {
 }
 
 static const char* hm_set_entry(hm_entry* entries, size_t capacity, const char* key, void* value, size_t* plength) {
-    uint64_t hash = hash_key(key);
+    const uint64_t hash = hash_key(key);
     size_t index = (size_t)(hash & (uint64_t)(capacity-1));
 
     while(entries[index].key != NULL) {
@@ -98,7 +98,7 @@ static const char* hm_set_entry(hm_entry* entries, size_t capacity, const char* 
 }
 
 static bool hm_expand(hm* map) {
-    size_t new_capacity = map->capacity * 2;
+    const size_t new_capacity = map->capacity * 2;
     if (new_capacity < map->capacity) {
         return false;
     }
@@ -108,7 +108,7 @@ static bool hm_expand(hm* map) {
     }
 
     for (size_t i = 0; i < map->capacity; i++) {
-        hm_entry entry = map->entries[i];
+        const hm_entry entry = map->entries[i];
         if (entry.key != NULL) {
             hm_set_entry(new_entries, new_capacity, entry.key, entry.value, NULL);
         }
@@ -146,12 +146,12 @@ hmiterator hm_iterator(hm* map) {
 }
 
 bool hm_next(hmiterator* it) {
-    hm* map = it->_map;
+    const hm* map = it->_map;
     while (it->_index < map->capacity) {
-        size_t i = it->_index;
+        const size_t i = it->_index;
         it->_index++;
         if (map->entries[i].key != NULL) {
-            hm_entry entry = map->entries[i];
+            const hm_entry entry = map->entries[i];
             it->key = entry.key;
             it->value = entry.value;
             return true;

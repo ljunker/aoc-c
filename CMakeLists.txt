@@ -20,12 +20,13 @@ add_compile_options(-Wall -Wextra)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-g -O0)
 else()
-    add_compile_options(-Werror -O3)
+    add_compile_options(-Werror -O3 -ffast-math -mcpu=apple-m2)
 endif()
 
-# ---- libcurl -----------------------------------------------------------------
+# ---- lib -----------------------------------------------------------------
 
 find_package(CURL REQUIRED)
+find_package(Threads REQUIRED)
 
 # ---- Containers library ------------------------------------------------------
 
@@ -59,7 +60,7 @@ foreach(day_src ${DAY_SOURCES})
     get_filename_component(day_name "${day_src}" NAME_WE) # e.g. 2025_day01
 
     add_executable(${day_name} "${day_src}")
-    target_link_libraries(${day_name} PRIVATE core containers)
+    target_link_libraries(${day_name} PRIVATE core containers Threads::Threads)
     target_include_directories(${day_name} PRIVATE
             ${CMAKE_SOURCE_DIR}/src
             ${CMAKE_SOURCE_DIR}/days
@@ -90,8 +91,6 @@ foreach(day_src ${DAY_SOURCES})
     )
 
     add_custom_target(bench-${day_name}
-            COMMAND ${CMAKE_COMMAND} -E echo "Benchmarking ${day_name} ..."
-            COMMAND ${CMAKE_COMMAND} -E echo "runs=20000"
             COMMAND $<TARGET_FILE:${day_name}> --bench 20000
             DEPENDS ${day_name}
             USES_TERMINAL
