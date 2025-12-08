@@ -52,8 +52,6 @@ def get_year_stars(year: int) -> int:
         headers=HEADERS,
         cookies=COOKIES,
     )
-    print(f"GET {AOC_URL.format(year=year, uid=UID)}")
-    print(res.text)
     assert res.status_code == 200
     time.sleep(args.sleep_sec)
 
