@@ -97,6 +97,27 @@ foreach(day_src ${DAY_SOURCES})
     )
 endforeach()
 
+# Single meta-target that will run all benchmarks sequentially
+add_custom_target(bench-all
+        COMMAND ${CMAKE_COMMAND} -E echo "===== Benchmarking all days ====="
+        USES_TERMINAL
+)
+
+foreach(day_src ${DAY_SOURCES})
+    get_filename_component(day_name "${day_src}" NAME_WE)
+
+    # Make sure the executable exists
+    add_dependencies(bench-all ${day_name})
+
+    # Append commands to bench-all; these run in order
+    add_custom_command(
+            TARGET bench-all
+            COMMAND ${CMAKE_COMMAND} -E echo "Benchmarking ${day_name}..."
+            COMMAND $<TARGET_FILE:${day_name}> --bench 20000
+            USES_TERMINAL
+    )
+endforeach()
+
 # ---- containers_test ---------------------------------------------------------
 
 add_executable(containers_test
