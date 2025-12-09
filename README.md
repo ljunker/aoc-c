@@ -2,9 +2,9 @@
 
 Advent of Code solved with C
 
-<a href="./README.md"><img src="https://img.shields.io/badge/total-201%20⭐-3e3e3e?style=for-the-badge"></img></a>
+<a href="./README.md"><img src="https://img.shields.io/badge/total-203%20⭐-997700?style=for-the-badge"></img></a>
 
-<img src="https://img.shields.io/badge/2025-16%20⭐-669900?style=flat-square"></img>
+<img src="https://img.shields.io/badge/2025-18%20⭐-4c9900?style=flat-square"></img>
 <img src="https://img.shields.io/badge/2024-50%20⭐-009900?style=flat-square"></img>
 <img src="https://img.shields.io/badge/2023-0%20⭐-990000?style=flat-square"></img>
 <img src="https://img.shields.io/badge/2022-33%20⭐-689900?style=flat-square"></img>

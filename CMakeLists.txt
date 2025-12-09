@@ -115,6 +115,7 @@ foreach(day_src ${DAY_SOURCES})
             COMMAND ${CMAKE_COMMAND} -E echo "Benchmarking ${day_name}..."
             COMMAND $<TARGET_FILE:${day_name}> --bench 20000
             USES_TERMINAL
+            POST_BUILD
     )
 endforeach()
 
